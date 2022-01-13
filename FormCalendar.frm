@@ -13,13 +13,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Private LABEL_DEFAULT_FORECOLOR As Long
-Private LABEL_EDGE_FORECOLOR As Long
-Private LABEL_DEFAULT_BACKCOLOR As Long
-Private LABEL_HOVER_BACKCOLOR As Long
-Private LABEL_SELECTED_BACKCOLOR As Long
-Private LABEL_DEFAULT_BORDERCOLOR As Long
-Private LABEL_TODAY_BORDERCOLOR As Long
+Private Const LABEL_DEFAULT_FORECOLOR As Long = &H80000012
+Private Const LABEL_EDGE_FORECOLOR As Long = &H80000010
+Private Const LABEL_DEFAULT_BACKCOLOR As Long = &H8000000F
+Private Const LABEL_HOVER_BACKCOLOR As Long = &H80000016
+Private Const LABEL_SELECTED_BACKCOLOR As Long = &H8000000A
+Private Const LABEL_DEFAULT_BORDERCOLOR As Long = &H80000006
+Private Const LABEL_TODAY_BORDERCOLOR As Long = &HFF&
+
 Private disableEvents As Boolean
 Private labelEventCol As Collection
 Private hoverLabel As CalendarDayLabel
@@ -112,14 +113,6 @@ End Sub
 Private Sub UserForm_Initialize()
     Dim labelObj As MSForms.Label
     Dim labelEventObj As CalendarDayLabel
-    
-    LABEL_DEFAULT_FORECOLOR = &H80000012
-    LABEL_EDGE_FORECOLOR = &H80000010
-    LABEL_DEFAULT_BACKCOLOR = &H8000000F
-    LABEL_HOVER_BACKCOLOR = &H80000016
-    LABEL_SELECTED_BACKCOLOR = &H8000000A
-    LABEL_DEFAULT_BORDERCOLOR = &H80000006
-    LABEL_TODAY_BORDERCOLOR = &HFF&
     
     disableEvents = False
     
