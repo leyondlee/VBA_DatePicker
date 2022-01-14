@@ -17,3 +17,5 @@ VBA_DatePicker is a datepicker form written in VBA. It was developed for develop
 Dim result as Variant
 result = DatePickerMod.selectDate()
 ```
+
+> **Note:** `DatePickerMod.selectDate()` will return `Null` when the form is cancelled or closed.
