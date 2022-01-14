@@ -3,7 +3,7 @@
 </div>
 
 # VBA_DatePicker
-VBA_DatePicker is a datepicker form written in VBA. It was developed for developers to provide a way for users to select a date from a calendar.
+VBA_DatePicker is a datepicker written in VBA. It was developed for developers to provide a way for users to select a date from a calendar.
 
 ## Setting up
 1. Open your project in **Microsoft Visual Basic for Applications**.
