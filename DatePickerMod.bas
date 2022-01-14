@@ -1,5 +1,5 @@
-Attribute VB_Name = "CalendarMod"
-Function getLastDate(monthInt As Integer, yearInt As Integer) As Date
+Attribute VB_Name = "DatePickerMod"
+Function getMonthLastDate(monthInt As Integer, yearInt As Integer) As Date
     Dim firstDate As Date
     Dim lastDate As Date
     
@@ -10,14 +10,14 @@ Function getLastDate(monthInt As Integer, yearInt As Integer) As Date
 End Function
 
 Function selectDate() As Variant
-    Dim calendarForm As FormCalendar
+    Dim datePickerForm As FormDatePicker
     Dim result As Variant
     
-    Set calendarForm = New FormCalendar
-    calendarForm.Show
+    Set datePickerForm = New FormDatePicker
+    datePickerForm.Show
     
-    result = calendarForm.getSelectedDate()
-    Unload calendarForm
+    result = datePickerForm.getSelectedDate()
+    Unload datePickerForm
     
     selectDate = result
 End Function

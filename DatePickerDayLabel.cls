@@ -2,12 +2,12 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "CalendarDayLabel"
+Attribute VB_Name = "DatePickerDayLabel"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private formObj As FormCalendar
+Private formObj As FormDatePicker
 Private WithEvents labelObj As MSForms.Label
 Attribute labelObj.VB_VarHelpID = -1
 Private labelDate As Variant
@@ -45,10 +45,10 @@ Private Sub labelObj_click()
     
     formObj.setSelectedLabel Me
     
-    formObj.setDisableEvents True
+    formObj.setDisableRefresh True
     formObj.CmbMonth.listIndex = monthInt - 1
     formObj.SpinYear.value = yearInt
-    formObj.setDisableEvents False
+    formObj.setDisableRefresh False
     
     Call formObj.refresh
 End Sub

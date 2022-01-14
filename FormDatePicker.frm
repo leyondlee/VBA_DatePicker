@@ -1,14 +1,14 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormCalendar 
-   Caption         =   "Calendar"
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormDatePicker 
+   Caption         =   "Select Date"
    ClientHeight    =   5655
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   4635
-   OleObjectBlob   =   "FormCalendar.frx":0000
+   OleObjectBlob   =   "FormDatePicker.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
-Attribute VB_Name = "FormCalendar"
+Attribute VB_Name = "FormDatePicker"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -21,10 +21,50 @@ Private Const LABEL_SELECTED_BACKCOLOR As Long = &H8000000A
 Private Const LABEL_DEFAULT_BORDERCOLOR As Long = &H80000006
 Private Const LABEL_TODAY_BORDERCOLOR As Long = &HFF&
 
-Private disableEvents As Boolean
+Private Const STR_DAYLABELTAG As String = "LblDay"
+Private Const STR_SELECTDATEPROMPT As String = "PLEASE SELECT A DATE"
+
+Private disableRefresh As Boolean
 Private labelEventCol As Collection
-Private hoverLabel As CalendarDayLabel
-Private selectedLabel As CalendarDayLabel
+Private hoverLabel As DatePickerDayLabel
+Private selectedLabel As DatePickerDayLabel
+
+Private Sub UserForm_Initialize()
+    Dim labelObj As MSForms.Label
+    Dim labelEventObj As DatePickerDayLabel
+    
+    disableRefresh = False
+    
+    Set labelEventCol = New Collection
+    
+    Set hoverLabel = Nothing
+    Set selectedLabel = Nothing
+    
+    For i = 1 To 42
+        Set labelObj = Me.Controls(STR_DAYLABELTAG & i)
+        
+        Set labelEventObj = New DatePickerDayLabel
+        labelEventObj.setFormObj Me
+        labelEventObj.setLabelObj labelObj
+        
+        labelEventCol.Add labelEventObj, Str(i)
+    Next i
+    
+    For i = 1 To 12
+        CmbMonth.AddItem UCase(MonthName(i))
+    Next i
+    
+    CmbMonth.listIndex = Month(Now()) - 1
+    SpinYear.value = Year(Now())
+End Sub
+
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+    If CloseMode <> 1 Then
+        Cancel = 1
+        Call resetSelected
+        Me.Hide
+    End If
+End Sub
 
 Private Sub ButtonLeft_Click()
     Dim monthInt As Integer
@@ -75,23 +115,15 @@ End Sub
 
 Private Sub ButtonOk_Click()
     If selectedLabel Is Nothing Then
-        MsgBox "PLEASE SELECT A DATE"
+        MsgBox STR_SELECTDATEPROMPT
         Exit Sub
     End If
     
     Me.Hide
 End Sub
 
-Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
-    If CloseMode <> 1 Then
-        Set selectedLabel = Nothing
-        Me.Hide
-        Cancel = 1
-    End If
-End Sub
-
 Private Sub CmbMonth_Change()
-    If disableEvents Then
+    If disableRefresh Then
         Exit Sub
     End If
     
@@ -102,41 +134,12 @@ End Sub
 Private Sub SpinYear_Change()
     TxtYear.value = SpinYear.value
     
-    If disableEvents Then
+    If disableRefresh Then
         Exit Sub
     End If
     
     Call resetSelected
     Call refresh
-End Sub
-
-Private Sub UserForm_Initialize()
-    Dim labelObj As MSForms.Label
-    Dim labelEventObj As CalendarDayLabel
-    
-    disableEvents = False
-    
-    Set labelEventCol = New Collection
-    
-    Set hoverLabel = Nothing
-    Set selectedLabel = Nothing
-    
-    For i = 1 To 42
-        Set labelObj = Me.Controls("LblDay" & i)
-        
-        Set labelEventObj = New CalendarDayLabel
-        labelEventObj.setFormObj Me
-        labelEventObj.setLabelObj labelObj
-        
-        labelEventCol.Add labelEventObj, Str(i)
-    Next i
-    
-    For i = 1 To 12
-        CmbMonth.AddItem UCase(MonthName(i))
-    Next i
-    
-    CmbMonth.listIndex = Month(Now()) - 1
-    SpinYear.value = Year(Now())
 End Sub
 
 Private Sub TxtYear_KeyDown(ByVal KeyCode As ReturnInteger, ByVal Shift As Integer)
@@ -186,7 +189,7 @@ Public Sub refresh()
     Dim prevLastDay As Integer
     Dim nextMonthInt As Integer
     Dim nextYearInt As Integer
-    Dim labelEventObj As CalendarDayLabel
+    Dim labelEventObj As DatePickerDayLabel
     Dim labelObj As MSForms.Label
     Dim dayInt As Integer
     Dim colorCode As Variant
@@ -202,21 +205,21 @@ Public Sub refresh()
     monthInt = CmbMonth.listIndex + 1
     
     firstWeekday = Weekday(DateSerial(yearInt, monthInt, 1))
-    lastDay = Day(CalendarMod.getLastDate(monthInt, yearInt))
+    lastDay = Day(DatePickerMod.getMonthLastDate(monthInt, yearInt))
     
     If monthInt = 1 Then
         prevYearInt = yearInt - 1
         
         If prevYearInt >= SpinYear.Min Then
             prevMonthInt = 12
-            prevLastDay = Day(CalendarMod.getLastDate(prevMonthInt, prevYearInt))
+            prevLastDay = Day(DatePickerMod.getMonthLastDate(prevMonthInt, prevYearInt))
         Else
             prevYearInt = -1
         End If
     Else
         prevMonthInt = monthInt - 1
         prevYearInt = yearInt
-        prevLastDay = Day(CalendarMod.getLastDate(prevMonthInt, prevYearInt))
+        prevLastDay = Day(DatePickerMod.getMonthLastDate(prevMonthInt, prevYearInt))
     End If
     
     If monthInt = 12 Then
@@ -302,8 +305,9 @@ Public Sub resetHover()
     selectedDate = getSelectedDate()
     If IsNull(selectedDate) Or hoverLabel.getLabelDate() <> selectedDate Then
         hoverLabel.getLabelObj.BackColor = LABEL_DEFAULT_BACKCOLOR
-        Set hoverLabel = Nothing
     End If
+    
+    Set hoverLabel = Nothing
 End Sub
 
 Public Sub resetSelected()
@@ -328,11 +332,11 @@ Public Function getSelectedDate() As Variant
     getSelectedDate = selectedLabel.getLabelDate()
 End Function
 
-Public Sub setDisableEvents(bool As Boolean)
-    disableEvents = bool
+Public Sub setDisableRefresh(bool As Boolean)
+    disableRefresh = bool
 End Sub
 
-Public Sub setHoverLabel(obj As CalendarDayLabel)
+Public Sub setHoverLabel(obj As DatePickerDayLabel)
     Dim labelObj As MSForms.Label
     
     Set hoverLabel = obj
@@ -344,6 +348,6 @@ Public Sub setHoverLabel(obj As CalendarDayLabel)
     End If
 End Sub
 
-Public Sub setSelectedLabel(labelObj As CalendarDayLabel)
+Public Sub setSelectedLabel(labelObj As DatePickerDayLabel)
     Set selectedLabel = labelObj
 End Sub
