@@ -304,7 +304,7 @@ Public Sub resetHover()
     
     selectedDate = getSelectedDate()
     If IsNull(selectedDate) Or hoverLabel.getLabelDate() <> selectedDate Then
-        hoverLabel.getLabelObj.BackColor = LABEL_DEFAULT_BACKCOLOR
+        hoverLabel.getLabelObj().BackColor = LABEL_DEFAULT_BACKCOLOR
     End If
     
     Set hoverLabel = Nothing
@@ -315,7 +315,7 @@ Public Sub resetSelected()
         Exit Sub
     End If
     
-    selectedLabel.getLabelObj.BackColor = LABEL_DEFAULT_BACKCOLOR
+    selectedLabel.getLabelObj().BackColor = LABEL_DEFAULT_BACKCOLOR
     Set selectedLabel = Nothing
 End Sub
 
