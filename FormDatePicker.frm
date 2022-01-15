@@ -267,8 +267,7 @@ Public Sub refresh()
             
             If Not IsNull(selectedDate) Then
                 If selectedDate = curDate Then
-                    Set selectedLabel = labelEventObj
-                    labelObj.BackColor = LABEL_SELECTED_BACKCOLOR
+                    setSelectedLabel labelEventObj
                 Else
                     labelObj.BackColor = LABEL_DEFAULT_BACKCOLOR
                 End If
@@ -348,6 +347,7 @@ Public Sub setHoverLabel(obj As DatePickerDayLabel)
     End If
 End Sub
 
-Public Sub setSelectedLabel(labelObj As DatePickerDayLabel)
-    Set selectedLabel = labelObj
+Public Sub setSelectedLabel(obj As DatePickerDayLabel)
+    Set selectedLabel = obj
+    obj.getLabelObj().BackColor = LABEL_SELECTED_BACKCOLOR
 End Sub
