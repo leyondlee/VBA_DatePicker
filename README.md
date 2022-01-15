@@ -10,7 +10,7 @@ VBA_DatePicker is a datepicker written in VBA. It was developed for developers t
 2. Import the following files: (`File` > `Import File`)
    - `DatePickerDayLabel.cls`
    - `DatePickerMod.bas`
-   - `FormDatePicker.frm`
+   - `FormDatePicker.frm` (Ensure that `FormDatePicker.frx` is within the same folder before importing)
 
 ## Usage
 ```
