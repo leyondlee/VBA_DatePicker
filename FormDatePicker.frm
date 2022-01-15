@@ -37,8 +37,8 @@ Private Sub UserForm_Initialize()
     
     Set labelEventCol = New Collection
     
-    Set hoverLabel = Nothing
-    Set selectedLabel = Nothing
+    setHoverLabel Nothing
+    setSelectedLabel Nothing
     
     For i = 1 To 42
         Set labelObj = Me.Controls(STR_DAYLABELTAG & i)
@@ -109,7 +109,7 @@ Private Sub ButtonRight_Click()
 End Sub
 
 Private Sub ButtonCancel_Click()
-    Set selectedLabel = Nothing
+    setSelectedLabel Nothing
     Me.Hide
 End Sub
 
@@ -306,7 +306,7 @@ Public Sub resetHover()
         hoverLabel.getLabelObj().BackColor = LABEL_DEFAULT_BACKCOLOR
     End If
     
-    Set hoverLabel = Nothing
+    setHoverLabel Nothing
 End Sub
 
 Public Sub resetSelected()
@@ -315,7 +315,8 @@ Public Sub resetSelected()
     End If
     
     selectedLabel.getLabelObj().BackColor = LABEL_DEFAULT_BACKCOLOR
-    Set selectedLabel = Nothing
+    
+    setSelectedLabel Nothing
 End Sub
 
 Public Function getSelectedDate() As Variant
@@ -340,6 +341,10 @@ Public Sub setHoverLabel(obj As DatePickerDayLabel)
     
     Set hoverLabel = obj
     
+    If obj Is Nothing Then
+        Exit Sub
+    End If
+    
     Set labelObj = obj.getLabelObj()
     selectedDate = getSelectedDate()
     If IsNull(selectedDate) Or obj.getLabelDate() <> selectedDate Then
@@ -349,5 +354,10 @@ End Sub
 
 Public Sub setSelectedLabel(obj As DatePickerDayLabel)
     Set selectedLabel = obj
+    
+    If obj Is Nothing Then
+        Exit Sub
+    End If
+    
     obj.getLabelObj().BackColor = LABEL_SELECTED_BACKCOLOR
 End Sub
